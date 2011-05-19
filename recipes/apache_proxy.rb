@@ -12,8 +12,17 @@ apache_site "000-default" do
   enable false
 end
 
-template "/opt/splunk/.htpasswd" do
-  source "htpasswd.erb"
-  owner node[:apache][:user]
-  mode 0600
+if node[:splunk][:alt_htpasswd]
+  template node[:splunk][:alt_htpasswd] do
+    source "htpasswd.erb"
+    owner node[:apache][:user]
+    mode 0600
+    not_if{File.exists?(node[:splunk][:alt_htpasswd])}
+  end
+else
+  template "#{node[:splunk][:root]}/.htpasswd" do
+    source "htpasswd.erb"
+    owner node[:apache][:user]
+    mode 0600
+  end
 end

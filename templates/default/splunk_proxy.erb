@@ -14,6 +14,10 @@
   Allow from all
   AuthName "<%= node[:fqdn] %>"
   AuthType Basic
-  AuthUserFile /opt/splunk/.htpasswd
+<% if node[:splunk][:alt_htpasswd] %>
+  AuthUserFile <%= node[:splunk][:alt_htpasswd] %>
+<% else %>
+  AuthUserFile <%= node[:splunk][:root] %>/.htpasswd
+<% end %>
   Require valid-user
 </Proxy>
