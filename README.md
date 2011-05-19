@@ -26,7 +26,7 @@ When using the free Splunk license, authentication is not supported. This recipe
 
 Attributes
 ==========
-`splunk[:home]` - Sets the root directory of the splunk installation; splunk documentation refers to this as `$SPLUNK_HOME`. Defaults to /opt/splunk. Changing this value is not a good idea when installing from packages but it might actually be used by future installation methods.
+`splunk[:root]` - Sets the root directory of the splunk installation; splunk documentation refers to this as `$SPLUNK_HOME`. Defaults to /opt/splunk. Changing this value is not a good idea when installing from packages but it might actually be used by future installation methods.
 
 `splunk[:version]` - Sets the version number of the desired splunk package to download and install in the format "N.N.N-NNNN". Defaults to latest as of cookbook release.
 

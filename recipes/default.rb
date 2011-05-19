@@ -26,10 +26,10 @@ end
 
 service "splunk" do
   supports :status => true, :restart => true, :reload => false
-  start_command "#{node[:splunk][:home]}/bin/splunk start --accept-license"
-  stop_command "#{node[:splunk][:home]}/bin/splunk stop"
-  restart_command "#{node[:splunk][:home]}/bin/splunk restart --accept-license"
-  status_command "#{node[:splunk][:home]}/bin/splunk status"
+  start_command "#{node[:splunk][:root]}/bin/splunk start --accept-license"
+  stop_command "#{node[:splunk][:root]}/bin/splunk stop"
+  restart_command "#{node[:splunk][:root]}/bin/splunk restart --accept-license"
+  status_command "#{node[:splunk][:root]}/bin/splunk status"
   action [ :start ]
   running true
 end
@@ -37,8 +37,8 @@ end
 bash "enable_boot" do
   user "root"
   code <<-EOH
-  #{node[:splunk][:home]}/bin/splunk start --accept-license
-  #{node[:splunk][:home]}/bin/splunk enable boot-start
+  #{node[:splunk][:root]}/bin/splunk start --accept-license
+  #{node[:splunk][:root]}/bin/splunk enable boot-start
   EOH
   not_if{File.exists?("/etc/init.d/splunk")}
 end
