@@ -29,7 +29,7 @@ service "splunk" do
   start_command "#{node[:splunk][:root]}/bin/splunk start --accept-license --answer-yes --no-prompt"
   stop_command "#{node[:splunk][:root]}/bin/splunk stop"
   restart_command "#{node[:splunk][:root]}/bin/splunk restart --accept-license --answer-yes --no-prompt"
-  status_command "ps aux | grep splunkd | grep -v grep"
+  status_command "expr `#{node[:splunk][:root]}/bin/splunk status | grep 'is not running' | wc -l` == 0"
   action [ :start ]
   running true
 end
