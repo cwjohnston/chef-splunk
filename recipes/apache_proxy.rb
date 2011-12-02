@@ -26,3 +26,9 @@ else
     mode 0600
   end
 end
+
+execute "Update bind settings in #{node[:splunk][:root]}/etc/splunk-launch.conf" do
+  command "echo '\nSPLUNK_BINDIP=127.0.0.1\n' >> #{node[:splunk][:root]}/etc/splunk-launch.conf"
+  notifies :restart, resources(:service => "splunk")
+end
+
