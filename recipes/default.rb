@@ -24,6 +24,14 @@ dpkg_package "splunk" do
   source "/usr/src/splunk-#{node[:splunk][:version]}-linux-2.6-#{pkg_arch}.deb"
 end
 
+template "#{node[:splunk][:root]}/etc/system/default/user-seed.conf" do
+  action :create
+  source "user-seed.conf.erb"
+  owner "root"
+  group "root"
+  mode "600"
+end
+
 service "splunk" do
   supports :status => true, :restart => true, :reload => false
   start_command "#{node[:splunk][:root]}/bin/splunk start --accept-license --answer-yes --no-prompt"
