@@ -12,7 +12,7 @@ else
   raise "seems that your system's architecture is neither i686 nor amd64; no dice."
 end
 
-short_ver=node[:splunk][:version].match(/\d.\d.\d/).to_s
+short_ver=node[:splunk][:version].match(/(.*)-/)[1]
 
 remote_file "/usr/src/splunk-#{node[:splunk][:version]}-linux-2.6-#{pkg_arch}.deb" do
   source "http://www.splunk.com/index.php/download_track?file=#{short_ver}/splunk/linux/splunk-#{node[:splunk][:version]}-linux-2.6-#{pkg_arch}.deb&ac=wiki_download&wget=true&name=wget&typed=releases"
@@ -22,6 +22,14 @@ end
 dpkg_package "splunk" do
   action :install
   source "/usr/src/splunk-#{node[:splunk][:version]}-linux-2.6-#{pkg_arch}.deb"
+end
+
+template "#{node[:splunk][:root]}/etc/system/default/user-seed.conf" do
+  action :create
+  source "user-seed.conf.erb"
+  owner "root"
+  group "root"
+  mode "600"
 end
 
 service "splunk" do

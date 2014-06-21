@@ -34,6 +34,8 @@ Attributes
 
 `splunk[:proxy_pass]` - Sets the hashed password for basic HTTP authentication when using `splunk::apache_proxy`. Default is hashed value for 'changeme' matching the default splunk password.
 
+`splunk[:admin_password]` - Sets the default admin password. The default value is Splunk's default `changeme`.
+
 Future Plans
 ============
 * Consider using tarball install to simplify support for all distributions.

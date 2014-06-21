@@ -27,9 +27,18 @@ else
   end
 end
 
-execute "Update bind settings in #{node[:splunk][:root]}/etc/splunk-launch.conf" do
-  command "echo '\nSPLUNK_BINDIP=127.0.0.1\n' >> #{node[:splunk][:root]}/etc/splunk-launch.conf"
-  notifies :restart, resources(:service => "splunk")
-  not_if "grep SPLUNK_BINDIP=127.0.0.1 #{node[:splunk][:root]}/etc/splunk-launch.conf"
-end
-
+if node[:splunk][:bind_all_interfaces]
+  # if bind to localhost is present, remove it
+  execute "Update bind settings in #{node[:splunk][:root]}/etc/splunk-launch.conf to allow bind on all interfaces" do
+    command "mv #{node[:splunk][:root]}/etc/splunk-launch.conf #{node[:splunk][:root]}/etc/splunk-launch.conf.backup; sed '/SPLUNK_BINDIP=127.0.0.1/d' #{node[:splunk][:root]}/etc/splunk-launch.conf.backup > #{node[:splunk][:root]}/etc/splunk-launch.conf"
+    notifies :restart, resources(:service => "splunk")
+    only_if "grep '^[[:space:]]*SPLUNK_BINDIP=127.0.0.1' #{node[:splunk][:root]}/etc/splunk-launch.conf"
+  end
+else
+  # if bind to localhost is not present, add it
+  execute "Update bind settings in #{node[:splunk][:root]}/etc/splunk-launch.conf to allow bind only on 127.0.0.1" do
+    command "echo '\nSPLUNK_BINDIP=127.0.0.1\n' >> #{node[:splunk][:root]}/etc/splunk-launch.conf"
+    notifies :restart, resources(:service => "splunk")
+    not_if "grep '^[[:space:]]*SPLUNK_BINDIP=127.0.0.1' #{node[:splunk][:root]}/etc/splunk-launch.conf"
+  end
+end  
